@@ -14,8 +14,8 @@ func NewWebServer() *WebServer {
 	return &WebServer{}
 }
 
-// doStart 启动服务器
-func (s *WebServer) doStart(port int) {
+// DoStart 启动服务器
+func (s *WebServer) DoStart(port int) {
 	// 设置请求处理器
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		// 处理请求
