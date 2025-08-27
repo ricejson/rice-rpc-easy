@@ -7,8 +7,15 @@ type LocalRegistry struct {
 	services sync.Map
 }
 
-func NewLocalRegistry() *LocalRegistry {
-	return &LocalRegistry{}
+var localRegistry *LocalRegistry
+var once sync.Once
+
+// GetInstance 获取唯一实例
+func GetInstance() *LocalRegistry {
+	once.Do(func() {
+		localRegistry = &LocalRegistry{}
+	})
+	return localRegistry
 }
 
 // Register 注册服务
