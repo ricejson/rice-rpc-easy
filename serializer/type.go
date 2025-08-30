@@ -2,8 +2,8 @@ package serializer
 
 // Serializer 序列化接口
 type Serializer interface {
-	// serialize 序列化
-	serialize(obj any) ([]byte, error)
-	// deserialize 反序列化
-	deserialize(bytes []byte, target any) error
+	// Serialize 序列化
+	Serialize(obj any) ([]byte, error)
+	// Deserialize 反序列化
+	Deserialize(bytes []byte, target any) error
 }

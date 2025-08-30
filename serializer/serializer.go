@@ -6,10 +6,14 @@ import "encoding/json"
 type NativeSerializer struct {
 }
 
-func (s *NativeSerializer) serialize(obj any) ([]byte, error) {
+func NewNativeSerializer() *NativeSerializer {
+	return &NativeSerializer{}
+}
+
+func (s *NativeSerializer) Serialize(obj any) ([]byte, error) {
 	return json.Marshal(obj)
 }
 
-func (s *NativeSerializer) deserialize(bytes []byte, target any) error {
+func (s *NativeSerializer) Deserialize(bytes []byte, target any) error {
 	return json.Unmarshal(bytes, target)
 }
