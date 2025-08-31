@@ -86,6 +86,8 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 		log.Fatalf("no result")
 		return resp
 	}
+	bytes, _ := h.serializer.Serialize(resultValues)
+	log.Println("resultValues: " + string(bytes))
 	// 如果有错误返回值，检查并返回
 	if len(resultValues) > 1 {
 		lastValue := resultValues[len(resultValues)-1]
