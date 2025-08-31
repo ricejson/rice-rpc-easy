@@ -33,6 +33,7 @@ func (h *RequestHandler) doLog() {
 // parseRpcRequest 解析rpc请求
 func (h *RequestHandler) parseRpcRequest() *model.RpcRequest {
 	body, _ := io.ReadAll(h.request.Body)
+	log.Println("rpc request body: " + string(body))
 	defer h.request.Body.Close()
 	// 反序列化
 	rpcRequest := model.RpcRequest{}
@@ -47,6 +48,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 	resp := &model.RpcResponse{}
 	if !exists {
 		resp.Err = errors.New("service not found")
+		log.Fatalf("service not found:")
 		return resp
 	}
 	implValue := reflect.ValueOf(impl)
@@ -54,6 +56,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 	method, exists := implType.MethodByName(request.MethodName)
 	if !exists {
 		resp.Err = errors.New("method not found")
+		log.Fatalf("method not found")
 		return resp
 	}
 
@@ -61,6 +64,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 	paramsCount := method.Type.NumIn() - 1
 	if len(request.Args) != paramsCount {
 		resp.Err = errors.New("invalid number of parameters")
+		log.Fatalf("invalid number of parameters")
 		return resp
 	}
 	params := make([]reflect.Value, paramsCount)
@@ -69,6 +73,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 		argValue := reflect.ValueOf(request.Args[i])
 		if !argValue.IsValid() || !argValue.Type().AssignableTo(paramType) {
 			resp.Err = errors.New("invalid argument")
+			log.Fatalf("invalid argument")
 			return resp
 		}
 		params[i] = argValue
@@ -78,6 +83,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 	// 处理返回值
 	if len(resultValues) == 0 {
 		resp.Err = errors.New("no result")
+		log.Fatalf("no result")
 		return resp
 	}
 	// 如果有错误返回值，检查并返回
@@ -101,5 +107,6 @@ func (h *RequestHandler) doResponse(resp *model.RpcResponse) {
 	}
 	h.writer.Header().Set("Content-Type", "application/json")
 	bytes, _ := h.serializer.Serialize(resp)
+	log.Println("response: " + string(bytes))
 	_, _ = h.writer.Write(bytes)
 }
