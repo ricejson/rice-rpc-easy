@@ -79,7 +79,7 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 		params[i] = argValue
 	}
 	// 调用method
-	resultValues := method.Func.Call(append([]reflect.Value{reflect.ValueOf(implValue)}, params...))
+	resultValues := method.Func.Call(append([]reflect.Value{implValue}, params...))
 	// 处理返回值
 	if len(resultValues) == 0 {
 		resp.Err = errors.New("no result")
