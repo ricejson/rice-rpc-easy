@@ -89,6 +89,9 @@ func (h *RequestHandler) invoke(request *model.RpcRequest) *model.RpcResponse {
 	bytes, _ := h.serializer.Serialize(resultValues)
 	log.Println("resultValues: " + string(bytes))
 	// 如果有错误返回值，检查并返回
+	for i, val := range resultValues {
+		log.Printf("Return value %d: type=%v, value=%v", i, val.Type(), val.Interface())
+	}
 	if len(resultValues) > 1 {
 		lastValue := resultValues[len(resultValues)-1]
 		if lastValue.Type().Name() == "error" && !lastValue.IsNil() {
